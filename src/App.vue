@@ -1,5 +1,8 @@
 <template>
-  <Header />
+  <div class="main">
+    <Header />
+    <router-view />
+  </div>
 </template>
 <script>
 import Header from "./components/Header.vue";
@@ -21,5 +24,9 @@ export default {
 
 body {
   background: #fafafa;
+}
+
+.main {
+  position: relative;
 }
 </style>

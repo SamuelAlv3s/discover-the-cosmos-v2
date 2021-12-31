@@ -2,10 +2,11 @@
   <header>
     <img src="../assets/planet-outline.svg" alt="Logo" />
     <div id="nav">
-      <router-link to="/" active-class="active">Home</router-link>
-      <router-link to="/about" active-class="active">About</router-link>
+      <router-link to="/" active-class="active">Galeria</router-link>
+      <router-link to="/picture-day" active-class="active">
+        Imagem do Dia
+      </router-link>
     </div>
-    <router-view />
   </header>
 </template>
 <script>
@@ -16,6 +17,8 @@ export default {
 <style scoped>
 header {
   position: fixed;
+  width: 100%;
+  height: 60px;
   top: 0;
   left: 0;
   width: 100%;
@@ -26,6 +29,19 @@ header {
   align-items: center;
   justify-content: flex-start;
   column-gap: 5px;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 5px 20px;
+    justify-content: space-between;
+  }
+
+  #nav {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 header img {
