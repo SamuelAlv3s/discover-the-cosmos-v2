@@ -29,6 +29,7 @@ header {
   align-items: center;
   justify-content: flex-start;
   column-gap: 5px;
+  z-index: 10;
 }
 
 @media (max-width: 768px) {
