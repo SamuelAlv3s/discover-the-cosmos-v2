@@ -33,8 +33,8 @@ export default {
 .modal-wrapper {
   width: 100%;
   height: 100vh;
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 20px;
   left: 0;
   background: rgba(0, 0, 0, 0.2);
   display: flex;
@@ -45,9 +45,9 @@ export default {
 
 .modal {
   position: relative;
-  width: 800px;
-  height: 450px;
-  background: #fafafa;
+  width: 850px;
+  height: 500px;
+  background: var(--background);
   border-radius: 15px;
   display: flex;
   justify-content: space-between;
@@ -77,7 +77,7 @@ export default {
 .modal-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
 }
 
 .modal-content {
@@ -91,6 +91,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   row-gap: 5px;
+  column-gap: 5px;
 }
 
 h4 {
@@ -112,7 +113,7 @@ h4 {
 
 /* Track */
 .explanation::-webkit-scrollbar-track {
-  background: #fafafa;
+  background: var(--background);
 }
 
 /* Handle */

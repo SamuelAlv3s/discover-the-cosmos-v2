@@ -22,7 +22,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  background: #fafafa;
+  background: var(--background);
   padding: 10px 100px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
@@ -55,11 +55,11 @@ header a {
   padding: 8px 20px;
   border-radius: 20px;
   font-weight: bold;
-  color: #0a0a0a;
+  color: var(--black);
 }
 
 header a.active {
-  background: #0a0a0a;
-  color: #fafafa;
+  background: var(--black);
+  color: var(--white);
 }
 </style>

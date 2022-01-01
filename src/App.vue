@@ -22,8 +22,16 @@ export default {
   font-family: Helvetica, sans-serif;
 }
 
+:root {
+  --black: #040911;
+  --white: #fafafa;
+  --red: #e83f5b;
+  --background: #fbfcff;
+  --blue: #3626a7;
+}
+
 body {
-  background: #fafafa;
+  background: var(--background);
 }
 
 .main {
