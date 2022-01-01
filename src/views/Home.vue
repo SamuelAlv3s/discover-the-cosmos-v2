@@ -1,21 +1,33 @@
 <template>
   <div class="card-container" v-if="apodImages">
     <figure id="card" v-for="(apod, index) in apodImages" :key="index">
-      <img :src="apod.url" :alt="apod.title" loading="lazy" />
+      <img
+        :src="apod.url"
+        :alt="apod.title"
+        loading="lazy"
+        @click="openModal(apod)"
+      />
     </figure>
   </div>
   <div v-else class="loading-container">
     <h1 data-text="Loading...">Loading...</h1>
   </div>
+  <Modal v-if="showModal" :apod="apod" @close-modal="closeModal" />
 </template>
 
 <script>
+import Modal from "../components/Modal.vue";
 export default {
   name: "Home",
   data() {
     return {
       apodImages: null,
+      apod: null,
+      showModal: false,
     };
+  },
+  components: {
+    Modal,
   },
   methods: {
     async getRandomImages() {
@@ -26,6 +38,16 @@ export default {
       const response = await request.json();
 
       this.apodImages = response.filter((item) => item.media_type !== "video");
+    },
+    openModal(apodData) {
+      this.apod = apodData;
+      this.showModal = true;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      document.querySelector("body").style.overflow = "hidden";
+    },
+    closeModal() {
+      this.showModal = false;
+      document.querySelector("body").style.overflow = "initial";
     },
   },
   mounted() {
