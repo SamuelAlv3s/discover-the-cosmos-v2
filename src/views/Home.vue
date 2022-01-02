@@ -1,7 +1,9 @@
 <template>
+  <button v-if="apodImages" @click="getRandomImages">More Images</button>
   <div class="card-container" v-if="apodImages">
     <figure id="card" v-for="(apod, index) in apodImages" :key="index">
       <img
+        v-if="apod.url"
         :src="apod.url"
         :alt="apod.title"
         loading="lazy"
@@ -31,6 +33,7 @@ export default {
   },
   methods: {
     async getRandomImages() {
+      this.apodImages = null;
       const request = await fetch(
         `https://api.nasa.gov/planetary/apod?api_key=0yDrBxsNT9gQZDsQVx0i26KWg7xHyYfANQakmgFj&count=20`
       );
@@ -38,7 +41,6 @@ export default {
       const response = await request.json();
 
       this.apodImages = response.filter((item) => item.media_type !== "video");
-
       console.log(this.apodImages);
     },
     openModal(apodData) {
@@ -61,13 +63,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   min-height: 100vh;
   background: var(--background);
 }
 
 .loading-container h1 {
   position: relative;
-  font-size: 8em;
+  font-size: clamp(1em, 6em, 8em);
   color: var(--black);
   text-transform: uppercase;
   border-bottom: 16px solid var(--black);
@@ -87,13 +90,47 @@ export default {
   animation: animate 2s linear infinite;
 }
 
+button {
+  margin-top: 70px;
+  margin-left: 30px;
+  padding: 10px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  background: var(--black);
+  color: var(--white);
+  cursor: pointer;
+  transition: filter 0.5s;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
 .card-container {
-  margin-top: 60px;
   padding: 20px 30px;
   width: 100%;
   height: 100%;
   column-count: 4;
   column-gap: 10px;
+}
+
+@media (max-width: 1024px) {
+  .card-container {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-container {
+    column-count: 1;
+  }
 }
 
 figure {
@@ -109,6 +146,7 @@ figure {
 
 figure img {
   width: 100%;
+  min-height: 100px;
   transition: transform 0.3s ease-in-out;
   image-rendering: optimizeSpeed;
   animation: lazy 2.5s ease-in-out;

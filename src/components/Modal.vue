@@ -45,7 +45,7 @@ export default {
 
 .modal {
   position: relative;
-  width: 850px;
+  width: 90%;
   height: 500px;
   background: var(--background);
   border-radius: 15px;
@@ -72,12 +72,14 @@ export default {
   width: 50%;
   height: 100%;
   overflow: hidden;
+  padding: 5px 0 5px 15px;
 }
 
 .modal-img img {
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: scale-down;
+  image-rendering: optimizeQuality;
 }
 
 .modal-content {
@@ -136,6 +138,31 @@ h4 {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+    height: calc(100vh - 100px);
+    flex-direction: column;
+  }
+
+  .modal-img {
+    width: 100%;
+    padding: 10px 5px;
+  }
+
+  .modal-img img {
+    object-fit: cover;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .close img {
+    filter: invert(1);
   }
 }
 </style>

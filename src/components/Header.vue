@@ -2,9 +2,9 @@
   <header>
     <img src="../assets/planet-outline.svg" alt="Logo" />
     <div id="nav">
-      <router-link to="/" active-class="active">Galeria</router-link>
+      <router-link to="/" active-class="active">Gallery</router-link>
       <router-link to="/picture-day" active-class="active">
-        Imagem do Dia
+        Picture of the day
       </router-link>
     </div>
   </header>

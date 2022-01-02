@@ -47,36 +47,34 @@ export default {
 </script>
 <style scoped>
 .container {
-  padding: 40px 100px;
+  margin-top: 60px;
+  padding: 20px 100px;
   width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: calc(100vh - 60px);
+  display: block;
 }
 
 .card {
   width: 100%;
   display: flex;
   align-items: center;
+  flex-direction: column;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
 }
 
 .card .image {
-  width: 40%;
-  height: 100%;
+  width: 100%;
   padding: 10px;
 }
 
 .image img {
   width: 100%;
   height: max-content;
-  border-radius: 15px 0 0 15px;
 }
 
 .card .content {
-  width: 60%;
+  width: 100%;
   padding: 10px;
 }
 
@@ -102,5 +100,11 @@ export default {
 }
 .card-body p {
   text-align: justify;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
 }
 </style>
