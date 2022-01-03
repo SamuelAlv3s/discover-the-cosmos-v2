@@ -25,12 +25,13 @@ export default {
   data() {
     return {
       apod: null,
+      apiKey: process.env.VUE_APP_API_KEY,
     };
   },
   methods: {
     async getPictureOfTheDay() {
       const request = await fetch(
-        `https://api.nasa.gov/planetary/apod?api_key=0yDrBxsNT9gQZDsQVx0i26KWg7xHyYfANQakmgFj`
+        `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}`
       );
 
       const response = await request.json();

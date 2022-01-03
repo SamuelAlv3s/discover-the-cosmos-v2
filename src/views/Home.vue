@@ -26,6 +26,7 @@ export default {
       apodImages: null,
       apod: null,
       showModal: false,
+      apiKey: process.env.VUE_APP_API_KEY,
     };
   },
   components: {
@@ -35,7 +36,7 @@ export default {
     async getRandomImages() {
       this.apodImages = null;
       const request = await fetch(
-        `https://api.nasa.gov/planetary/apod?api_key=0yDrBxsNT9gQZDsQVx0i26KWg7xHyYfANQakmgFj&count=20`
+        `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
       );
 
       const response = await request.json();
