@@ -3,10 +3,10 @@
   <div class="card-container" v-if="apodImages">
     <figure id="card" v-for="(apod, index) in apodImages" :key="index">
       <img
-        v-if="apod.url"
+        v-show="isLoaded"
         :src="apod.url"
         :alt="apod.title"
-        loading="lazy"
+        @load="loadImage"
         @click="openModal(apod)"
       />
     </figure>
@@ -15,6 +15,7 @@
     <h1 data-text="Loading...">Loading...</h1>
   </div>
   <Modal v-if="showModal" :apod="apod" @close-modal="closeModal" />
+  <div v-show="showSentinel" id="sentinel"></div>
 </template>
 
 <script>
@@ -27,6 +28,8 @@ export default {
       apod: null,
       showModal: false,
       apiKey: process.env.VUE_APP_API_KEY,
+      isLoaded: false,
+      showSentinel: false,
     };
   },
   components: {
@@ -53,9 +56,35 @@ export default {
       this.showModal = false;
       document.querySelector("body").style.overflow = "initial";
     },
+    loadMore() {
+      const intersectionObserver = new IntersectionObserver(async (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          const request = await fetch(
+            `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
+          );
+
+          const response = await request.json();
+
+          this.apodImages.push(
+            ...response.filter((item) => item.media_type !== "video")
+          );
+
+          console.log("adicionou: ", this.apodImages);
+        }
+      });
+
+      intersectionObserver.observe(document.querySelector("#sentinel"));
+
+      return () => intersectionObserver.disconnect();
+    },
+    loadImage() {
+      this.isLoaded = true;
+      this.showSentinel = true;
+    },
   },
   mounted() {
     this.getRandomImages();
+    this.loadMore();
   },
 };
 </script>
@@ -142,7 +171,7 @@ figure {
   max-width: 100%;
   overflow: hidden;
   border-radius: 15px;
-  animation: lazy 2.5s ease-in-out;
+  animation: lazy 3.5s ease-in-out;
 }
 
 figure img {
@@ -150,23 +179,25 @@ figure img {
   min-height: 100px;
   transition: transform 0.3s ease-in-out;
   image-rendering: optimizeSpeed;
-  animation: lazy 2.5s ease-in-out;
+  animation: lazy 3.5s ease-in-out;
 }
 
 figure:hover img {
   transform: scale(1.1);
 }
 
+#sentinel {
+  width: 100%;
+  height: 25px;
+  background: transparent;
+}
+
 @keyframes lazy {
   0% {
     opacity: 0;
-    width: 80%;
-    height: 80%;
   }
   100% {
     opacity: 1;
-    width: 100%;
-    height: 100%;
   }
 }
 
