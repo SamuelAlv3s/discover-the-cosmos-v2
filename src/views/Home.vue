@@ -22,7 +22,7 @@
     <h1 data-text="Loading...">Loading...</h1>
   </div>
   <Modal v-if="showModal" :apod="apod" @close-modal="closeModal" />
-  <div v-show="showSentinel" id="sentinel"></div>
+  <div  id="sentinel"></div>
 </template>
 
 <script>
@@ -47,15 +47,15 @@ export default {
     async getRandomImages() {
       this.apodImages = null;
       const request = await fetch(
-        `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
+        `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=25`
       );
 
       const response = await request.json();
 
-      this.apodImages = response.filter((item) => item.media_type !== "video");
+      this.apodImages = response.filter((item) => item.media_type !== "video").slice(0, 20)
       console.log(this.apodImages);
 
-      for( let i = 0; i < 4; i++) {
+      for(let i = 0; i < 4; i++) {
         this.gallery.push(this.apodImages.slice(i*(this.apodImages.length/4), (i+1)*(this.apodImages.length / 4)))
       }
 
@@ -217,9 +217,11 @@ figure:hover img {
 }
 
 #sentinel {
+  position: absolute;
+  bottom: 1000px;
   width: 100%;
   height: 25px;
-  background: transparent;
+  background: red;
 }
 
 @keyframes lazy {
