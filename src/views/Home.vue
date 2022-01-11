@@ -1,6 +1,6 @@
 <template>
   <button v-if="apodImages" @click="getRandomImages">More Images</button>
-  <div class="card-container" v-if="apodImages">
+  <!-- <div class="card-container" v-if="apodImages">
     <figure id="card" v-for="(apod, index) in apodImages" :key="index">
       <img
         v-show="isLoaded"
@@ -10,6 +10,13 @@
         @click="openModal(apod)"
       />
     </figure>
+  </div> -->
+  <div class="row" v-if="gallery.length">
+    <div class="column" v-for="(item, index) in gallery" :key="index">
+      <figure v-for="(item2, index) in item" :key="index">
+        <img :src="item2.url" :alt="item2.title" :load="loadImage">
+      </figure>
+    </div>
   </div>
   <div v-else class="loading-container">
     <h1 data-text="Loading...">Loading...</h1>
@@ -30,6 +37,7 @@ export default {
       apiKey: process.env.VUE_APP_API_KEY,
       isLoaded: false,
       showSentinel: false,
+      gallery: []
     };
   },
   components: {
@@ -46,6 +54,12 @@ export default {
 
       this.apodImages = response.filter((item) => item.media_type !== "video");
       console.log(this.apodImages);
+
+      for( let i = 0; i < 4; i++) {
+        this.gallery.push(this.apodImages.slice(i*(this.apodImages.length/4), (i+1)*(this.apodImages.length / 4)))
+      }
+
+      console.log(this.gallery);
     },
     openModal(apodData) {
       this.apod = apodData;
@@ -59,6 +73,7 @@ export default {
     loadMore() {
       const intersectionObserver = new IntersectionObserver(async (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
+
           const request = await fetch(
             `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
           );
@@ -70,6 +85,9 @@ export default {
           );
 
           console.log("adicionou: ", this.apodImages);
+
+
+           this.gallery.forEach((el, i) => el.push(...response.slice(i*5, (i+1)*5)))
         }
       });
 
@@ -135,6 +153,18 @@ button {
 
 button:hover {
   filter: brightness(1.1);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px 30px;
+}
+
+.column {
+  flex: 25%;
+  max-width: 25%;
+  padding: 0 4px;
 }
 
 .card-container {
