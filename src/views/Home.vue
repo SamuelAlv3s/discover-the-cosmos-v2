@@ -45,14 +45,14 @@ export default {
       this.showMainLoading = true;
       try {
         const request = await fetch(
-          `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
+          `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=25`
         );
 
         const response = await request.json();
 
-        const filteredData = response.filter(
-          (item) => item.media_type !== "video" && item.url
-        );
+        const filteredData = response
+          .filter((item) => item.media_type !== "video" && item.url)
+          .slice(0, 20);
 
         for (let i = 0; i < 4; i++) {
           this.gallery.push(
@@ -84,14 +84,14 @@ export default {
           try {
             this.showLoading = true;
             const request = await fetch(
-              `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
+              `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=25`
             );
 
             const response = await request.json();
 
-            const filteredData = response.filter(
-              (item) => item.media_type !== "video" && item.url
-            );
+            const filteredData = response
+              .filter((item) => item.media_type !== "video" && item.url)
+              .slice(0, 20);
 
             this.gallery.forEach((el, i) =>
               el.push(...filteredData.slice(i * 5, (i + 1) * 5))
