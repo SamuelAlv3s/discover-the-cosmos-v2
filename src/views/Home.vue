@@ -1,28 +1,24 @@
 <template>
-  <button v-if="apodImages" @click="getRandomImages">More Images</button>
-  <!-- <div class="card-container" v-if="apodImages">
-    <figure id="card" v-for="(apod, index) in apodImages" :key="index">
-      <img
-        v-show="isLoaded"
-        :src="apod.url"
-        :alt="apod.title"
-        @load="loadImage"
-        @click="openModal(apod)"
-      />
-    </figure>
-  </div> -->
   <div class="row" v-if="gallery.length">
     <div class="column" v-for="(item, index) in gallery" :key="index">
       <figure v-for="(item2, index) in item" :key="index">
-        <img :src="item2.url" :alt="item2.title" :load="loadImage">
+        <img :src="item2.url" :alt="item2.title" @load="loadImage" />
       </figure>
     </div>
   </div>
-  <div v-else class="loading-container">
+  <div v-if="showMainLoading" class="loading-container">
     <h1 data-text="Loading...">Loading...</h1>
   </div>
   <Modal v-if="showModal" :apod="apod" @close-modal="closeModal" />
-  <div  id="sentinel"></div>
+  <div v-show="showSentinel" id="sentinel"></div>
+  <div class="loading" v-show="showLoading">
+    <img src="../assets/loading.gif" alt="loading" />
+  </div>
+  <div class="error-wrapper" v-show="showError">
+    <div class="error">
+      <img src="../assets/error500.gif" alt="error 500" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -31,13 +27,14 @@ export default {
   name: "Home",
   data() {
     return {
-      apodImages: null,
-      apod: null,
       showModal: false,
       apiKey: process.env.VUE_APP_API_KEY,
       isLoaded: false,
       showSentinel: false,
-      gallery: []
+      gallery: [],
+      showMainLoading: false,
+      showLoading: false,
+      showError: false,
     };
   },
   components: {
@@ -45,21 +42,32 @@ export default {
   },
   methods: {
     async getRandomImages() {
-      this.apodImages = null;
-      const request = await fetch(
-        `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=25`
-      );
+      this.showMainLoading = true;
+      try {
+        const request = await fetch(
+          `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
+        );
 
-      const response = await request.json();
+        const response = await request.json();
 
-      this.apodImages = response.filter((item) => item.media_type !== "video").slice(0, 20)
-      console.log(this.apodImages);
+        const filteredData = response.filter(
+          (item) => item.media_type !== "video" && item.url
+        );
 
-      for(let i = 0; i < 4; i++) {
-        this.gallery.push(this.apodImages.slice(i*(this.apodImages.length/4), (i+1)*(this.apodImages.length / 4)))
+        for (let i = 0; i < 4; i++) {
+          this.gallery.push(
+            filteredData.slice(
+              i * (filteredData.length / 4),
+              (i + 1) * (filteredData.length / 4)
+            )
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        this.showError = true;
+      } finally {
+        this.showMainLoading = false;
       }
-
-      console.log(this.gallery);
     },
     openModal(apodData) {
       this.apod = apodData;
@@ -73,21 +81,26 @@ export default {
     loadMore() {
       const intersectionObserver = new IntersectionObserver(async (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
+          try {
+            this.showLoading = true;
+            const request = await fetch(
+              `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
+            );
 
-          const request = await fetch(
-            `https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&count=20`
-          );
+            const response = await request.json();
 
-          const response = await request.json();
+            const filteredData = response.filter(
+              (item) => item.media_type !== "video" && item.url
+            );
 
-          this.apodImages.push(
-            ...response.filter((item) => item.media_type !== "video")
-          );
-
-          console.log("adicionou: ", this.apodImages);
-
-
-           this.gallery.forEach((el, i) => el.push(...response.slice(i*5, (i+1)*5)))
+            this.gallery.forEach((el, i) =>
+              el.push(...filteredData.slice(i * 5, (i + 1) * 5))
+            );
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.showLoading = false;
+          }
         }
       });
 
@@ -118,7 +131,7 @@ export default {
 
 .loading-container h1 {
   position: relative;
-  font-size: clamp(1em, 6em, 8em);
+  font-size: clamp(1em, 4em, 8em);
   color: var(--black);
   text-transform: uppercase;
   border-bottom: 16px solid var(--black);
@@ -156,6 +169,7 @@ button:hover {
 }
 
 .row {
+  margin-top: 60px;
   display: flex;
   flex-wrap: wrap;
   padding: 15px 30px;
@@ -167,29 +181,29 @@ button:hover {
   padding: 0 4px;
 }
 
-.card-container {
-  padding: 20px 30px;
-  width: 100%;
-  height: 100%;
-  column-count: 4;
-  column-gap: 10px;
-}
-
 @media (max-width: 1024px) {
-  .card-container {
-    column-count: 3;
+  .column {
+    flex: 33.33%;
+    max-width: 33.33%;
   }
 }
 
 @media (max-width: 768px) {
-  .card-container {
-    column-count: 2;
+  .column {
+    flex: 50%;
+    max-width: 50%;
   }
 }
 
 @media (max-width: 480px) {
-  .card-container {
-    column-count: 1;
+  .column {
+    flex: 100%;
+    max-width: 100%;
+  }
+
+  .error {
+    width: 250px;
+    height: 250px;
   }
 }
 
@@ -218,10 +232,50 @@ figure:hover img {
 
 #sentinel {
   position: absolute;
-  bottom: 1000px;
+  bottom: 250px;
   width: 100%;
   height: 25px;
-  background: red;
+  background: transparent;
+}
+
+.loading {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  background: var(--blue);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  animation: toUp 1s forwards ease-in-out;
+}
+
+.loading img {
+  width: 50px;
+  height: 50px;
+}
+
+.error-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.error {
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.error img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @keyframes lazy {
@@ -239,6 +293,21 @@ figure:hover img {
   }
   100% {
     width: 100%;
+  }
+}
+
+@keyframes toUp {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    bottom: 0;
+  }
+  100% {
+    width: 50px;
+    height: 50px;
+    opacity: 1;
+    bottom: 10%;
   }
 }
 </style>
