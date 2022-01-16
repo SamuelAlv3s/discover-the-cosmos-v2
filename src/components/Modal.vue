@@ -5,7 +5,7 @@
         <img src="../assets/close-outline.svg" />
       </div>
       <div class="modal-img">
-        <img :src="apod.url" :alt="apod.title" />
+        <img :src="apod.hdurl" :alt="apod.title" />
       </div>
       <div class="modal-content">
         <div class="header">
@@ -46,13 +46,13 @@ export default {
 .modal {
   position: relative;
   width: 90%;
-  height: 500px;
+  height: 80%;
   background: var(--background);
   border-radius: 15px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
+  align-items: flex-start;
+  overflow: auto;
   animation: animate 0.5s ease-in-out;
 }
 
@@ -84,7 +84,7 @@ export default {
 
 .modal-content {
   width: 50%;
-  padding: 10px 15px;
+  padding: 35px 15px;
 }
 
 .header {
@@ -97,34 +97,32 @@ export default {
 }
 
 h4 {
-  margin: 10px 0;
+  margin: 1px 0;
 }
 
 .explanation {
-  height: 310px;
   padding: 5px;
-  max-height: 310px;
   overflow: auto;
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.02);
 }
 
-.explanation::-webkit-scrollbar {
+.modal::-webkit-scrollbar {
   width: 4px;
 }
 
 /* Track */
-.explanation::-webkit-scrollbar-track {
+.modal::-webkit-scrollbar-track {
   background: var(--background);
 }
 
 /* Handle */
-.explanation::-webkit-scrollbar-thumb {
+.modal::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2);
 }
 
 /* Handle on hover */
-.explanation::-webkit-scrollbar-thumb:hover {
+.modal::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
 }
 

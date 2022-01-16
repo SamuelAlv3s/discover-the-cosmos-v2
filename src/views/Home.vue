@@ -155,23 +155,6 @@ export default {
   animation: animate 2s linear infinite;
 }
 
-button {
-  margin-top: 70px;
-  margin-left: 30px;
-  padding: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
-  background: var(--black);
-  color: var(--white);
-  cursor: pointer;
-  transition: filter 0.5s;
-}
-
-button:hover {
-  filter: brightness(1.1);
-}
-
 .row {
   margin-top: 60px;
   display: flex;
@@ -183,6 +166,12 @@ button:hover {
   flex: 25%;
   max-width: 25%;
   padding: 0 4px;
+}
+
+@media (min-width: 1200px) {
+  .row {
+    padding: 30px 60px;
+  }
 }
 
 @media (max-width: 480px) {
