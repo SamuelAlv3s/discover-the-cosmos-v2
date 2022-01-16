@@ -1,8 +1,12 @@
 <template>
   <div class="row" v-if="gallery.length">
-    <div class="column" v-for="(item, index) in gallery" :key="index">
-      <figure v-for="(item2, index) in item" :key="index">
-        <img :src="item2.url" :alt="item2.title" @load="loadImage" />
+    <div class="column" v-for="(column, index) in gallery" :key="index">
+      <figure
+        v-for="(item, index) in column"
+        :key="index"
+        @click="openModal(item)"
+      >
+        <img :src="item.url" :alt="item.title" @load="loadImage" />
       </figure>
     </div>
   </div>
@@ -181,24 +185,10 @@ button:hover {
   padding: 0 4px;
 }
 
-@media (max-width: 1024px) {
-  .column {
-    flex: 33.33%;
-    max-width: 33.33%;
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .column {
     flex: 50%;
     max-width: 50%;
-  }
-}
-
-@media (max-width: 480px) {
-  .column {
-    flex: 100%;
-    max-width: 100%;
   }
 
   .error {
@@ -220,10 +210,12 @@ figure {
 
 figure img {
   width: 100%;
-  min-height: 100px;
+  min-height: 150px;
+  max-height: 350px;
   transition: transform 0.3s ease-in-out;
   image-rendering: optimizeSpeed;
   animation: lazy 3.5s ease-in-out;
+  object-fit: cover;
 }
 
 figure:hover img {
